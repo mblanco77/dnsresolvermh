@@ -83,6 +83,9 @@ module localNetworkGateway 'networking/LocalNetworkGateway.bicep' = {
     localNetworkGatewayName: 'lng-onprem'
     location: location
   }
+  dependsOn:[
+    virtualNetworkGatewayOnprem
+  ]
 }
 
 module connection 'networking/vpn.bicep' = {
@@ -108,6 +111,9 @@ module localNetworkGatewayonprem 'networking/LocalNetworkGateway.bicep' = {
     localNetworkGatewayName: 'lng-hub'
     location: location
   }
+  dependsOn:[
+    virtualNetworkGateway
+  ]
 }
 
 module connectiononprem 'networking/vpn.bicep' = {
