@@ -29,6 +29,10 @@ module peeringModule 'networking/peerings.bicep' = {
   params:{
     
   }
+  dependsOn:[
+    vnetModuleOnprem
+    vnetModule
+  ]
 }
 
 module virtualNetworkGateway 'networking/VirtualNetworkGateway.bicep' = {
@@ -45,6 +49,9 @@ module virtualNetworkGateway 'networking/VirtualNetworkGateway.bicep' = {
     VirtualNetworkName: 'hub-vnet'
     vpnType: 'RouteBased'
   }
+  dependsOn:[
+    vnetModule
+  ]
 }
 
 module virtualNetworkGatewayOnprem 'networking/VirtualNetworkGateway.bicep' = {
@@ -61,6 +68,9 @@ module virtualNetworkGatewayOnprem 'networking/VirtualNetworkGateway.bicep' = {
     VirtualNetworkName: 'onprem-vnet'
     vpnType: 'RouteBased'
   }
+  dependsOn:[
+    vnetModuleOnprem
+  ]
 }
 
 module localNetworkGateway 'networking/LocalNetworkGateway.bicep' = {
