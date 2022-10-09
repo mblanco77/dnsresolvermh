@@ -23,7 +23,7 @@ resource PublicIpAddressName_resource 'Microsoft.Network/publicIPAddresses@2021-
   name: PublicIpAddressName
   location: location
   properties: {
-    publicIPAllocationMethod: 'Dynamic'
+    publicIPAllocationMethod: 'Static'
   }
 }
 
