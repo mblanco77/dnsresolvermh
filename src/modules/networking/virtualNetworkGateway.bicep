@@ -23,7 +23,7 @@ resource PublicIpAddressName_resource 'Microsoft.Network/publicIPAddresses@2021-
   name: PublicIpAddressName
   location: location
   properties: {
-    publicIPAllocationMethod: 'Static'
+    publicIPAllocationMethod: 'Dynamic'
   }
 }
 
@@ -58,4 +58,4 @@ resource virtualNetworkGateway 'Microsoft.Network/virtualNetworkGateways@2021-02
   ]
 }
 output vngid string = virtualNetworkGateway.id
-output ip string = PublicIpAddressName_resource.properties.ipAddress
+output ipid string = PublicIpAddressName_resource.id

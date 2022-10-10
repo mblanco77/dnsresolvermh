@@ -72,6 +72,15 @@ module virtualNetworkGatewayOnprem 'networking/VirtualNetworkGateway.bicep' = {
     vnetModuleOnprem
   ]
 }
+module linkedTemplateGetIpOnprem 'networking/getiphub.bicep' = {
+  name: 'linkedTemplateGetIpOnprem'
+  params: {
+    ipName: virtualNetworkGatewayOnprem.outputs.ipid
+  }
+  dependsOn: [
+    virtualNetworkGatewayOnprem
+  ]
+}
 
 module localNetworkGateway 'networking/LocalNetworkGateway.bicep' = {
   name: 'LocalNetworkGateway'
@@ -79,7 +88,7 @@ module localNetworkGateway 'networking/LocalNetworkGateway.bicep' = {
     addressPrefixes: [
       '192.168.0.0/16'
     ]
-    gatewayIpAddress: virtualNetworkGatewayOnprem.outputs.ip
+    gatewayIpAddress: linkedTemplateGetIpOnprem.outputs.ipoutgw
     localNetworkGatewayName: 'lng-onprem'
     location: location
   }
@@ -100,6 +109,15 @@ module connection 'networking/vpn.bicep' = {
     virtualNetworkGatewayId: virtualNetworkGateway.outputs.vngid
   }
 }
+module linkedTemplateGetIpHub 'networking/getiphub.bicep' = {
+  name: 'linkedTemplateGetIpHub'
+  params: {
+    ipName: virtualNetworkGateway.outputs.ipid
+  }
+  dependsOn: [
+    virtualNetworkGateway
+  ]
+}
 
 module localNetworkGatewayonprem 'networking/LocalNetworkGateway.bicep' = {
   name: 'LocalNetworkGatewayOnprem'
@@ -107,7 +125,7 @@ module localNetworkGatewayonprem 'networking/LocalNetworkGateway.bicep' = {
     addressPrefixes: [
       '10.60.0.0/16'
     ]
-    gatewayIpAddress: virtualNetworkGateway.outputs.ip
+    gatewayIpAddress: linkedTemplateGetIpHub.outputs.ipoutgw
     localNetworkGatewayName: 'lng-hub'
     location: location
   }
