@@ -8,7 +8,7 @@ param _artifactsLocation string
 var configuration = {
   uriInstallScripts: '${_artifactsLocation}/scripts/installsoftware.ps1'
   scriptexednshub: './installsoftwarednshub.ps1'
-  scriptexednsonprem: './installsoftwaredns.ps1 blob.core.windows.net 10.5.0.254'
+  //scriptexednsonprem: './installsoftwaredns.ps1 blob.core.windows.net 10.5.0.254'
   scriptexeonprem: './installsoftware.ps1'
   scriptexespoke: './installsoftware.ps1'
 }

@@ -17,7 +17,6 @@ module compmod 'modules/compute.bicep' = {
     location: location
     _artifactsLocation: _artifactsLocation
   }
-
+}
 
 output pass string = compmod.outputs.pass
-
