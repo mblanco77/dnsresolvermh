@@ -7,8 +7,9 @@ param _artifactsLocation string
 
 var configuration = {
   uriInstallScripts: '${_artifactsLocation}/src/scripts/installsoftware.ps1'
+  uriInstallScriptsDNS: '${_artifactsLocation}/src/scripts/installsoftwaredns.ps1'
   scriptexednshub: './installsoftwarednshub.ps1'
-  //scriptexednsonprem: './installsoftwaredns.ps1 blob.core.windows.net 10.5.0.254'
+  scriptexednsonprem: './installsoftwaredns.ps1 blob.core.windows.net 10.5.0.254'
   scriptexeonprem: './installsoftware.ps1'
   scriptexespoke: './installsoftware.ps1'
 }
@@ -61,6 +62,8 @@ module modvmdns 'compute/windowsvm.bicep' = {
     location: location
     virtualNetworkName: 'onprem-vnet'
     subnetName:'vmSubnet'
+    scriptURL: configuration.uriInstallScriptsDNS
+    scriptExecute: configuration.scriptexednsonprem
 
   }
 }
