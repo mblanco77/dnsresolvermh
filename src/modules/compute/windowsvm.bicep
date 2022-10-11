@@ -84,6 +84,9 @@ resource nic 'Microsoft.Network/networkInterfaces@2021-02-01' = {
       }
     ]
   }
+  dependsOn:[
+    vnetExternal
+  ]
 }
 
 resource vm 'Microsoft.Compute/virtualMachines@2021-03-01' = {
