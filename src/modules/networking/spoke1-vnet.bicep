@@ -49,7 +49,9 @@ resource virtualNetwork 'Microsoft.Network/virtualNetworks@2019-11-01' = {
         name: spoke1SubnetName
         properties: {
           addressPrefix: spoke1SubnetPrefix
-          networkSecurityGroup:securityGroup
+          networkSecurityGroup:{
+            id:securityGroup.id
+          }
         }
       }
     ]
