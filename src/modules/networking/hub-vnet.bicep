@@ -36,6 +36,29 @@ param vmSubnetName string = 'vmSubnet'
 @description('vm subnet prefix')
 param vmSubnetPrefix string = '10.60.1.0/24'
 
+resource securityGroup 'Microsoft.Network/networkSecurityGroups@2021-02-01' = {
+  name: 'nsghub'
+  location: location
+  properties: {
+    securityRules: [
+      {
+        name: 'default-allow-3389'
+        properties: {
+          priority: 1000
+          access: 'Allow'
+          direction: 'Inbound'
+          destinationPortRange: '3389'
+          protocol: 'Tcp'
+          sourcePortRange: '*'
+          sourceAddressPrefix: '*'
+          destinationAddressPrefix: '*'
+        }
+      }
+    ]
+  }
+}
+
+
 
 resource virtualNetwork 'Microsoft.Network/virtualNetworks@2019-11-01' = {
   name: vnetName
@@ -75,9 +98,12 @@ resource virtualNetwork 'Microsoft.Network/virtualNetworks@2019-11-01' = {
         name: vmSubnetName
         properties: {
           addressPrefix: vmSubnetPrefix
+          networkSecurityGroup: securityGroup          
         }
       }
 
     ]
   }
 }
+
+

@@ -57,30 +57,6 @@ resource pip 'Microsoft.Network/publicIPAddresses@2021-02-01' = {
   }
 }
 
-resource securityGroup 'Microsoft.Network/networkSecurityGroups@2021-02-01' = {
-  name: networkSecurityGroupName
-  location: location
-  properties: {
-    securityRules: [
-      {
-        name: 'default-allow-3389'
-        properties: {
-          priority: 1000
-          access: 'Allow'
-          direction: 'Inbound'
-          destinationPortRange: '3389'
-          protocol: 'Tcp'
-          sourcePortRange: '*'
-          sourceAddressPrefix: '*'
-          destinationAddressPrefix: '*'
-        }
-      }
-    ]
-  }
-}
-
-
-
 resource nic 'Microsoft.Network/networkInterfaces@2021-02-01' = {
   name: nicName
   location: location
