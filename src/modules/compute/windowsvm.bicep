@@ -35,9 +35,13 @@ param virtualNetworkName string
 @description('Name of the existing vnet')
 param subnetName string
 
-var nicName = '${vmName}nic'
+@description('url of the installer script')
+param scriptURL string = ''
 
-var networkSecurityGroupName = 'default-NSG'
+@description('script exe')
+param scriptExecute string = ''
+
+var nicName = '${vmName}nic'
 
 var dnsLabelPrefix = toLower('${vmName}-${uniqueString(resourceGroup().id, vmName)}')
 
@@ -57,6 +61,10 @@ resource pip 'Microsoft.Network/publicIPAddresses@2021-02-01' = {
   }
 }
 
+resource vnetExternal 'Microsoft.Network/virtualNetworks@2020-08-01' existing = {
+  name : virtualNetworkName
+}
+
 resource nic 'Microsoft.Network/networkInterfaces@2021-02-01' = {
   name: nicName
   location: location
@@ -70,7 +78,7 @@ resource nic 'Microsoft.Network/networkInterfaces@2021-02-01' = {
             id: pip.id
           }
           subnet: {
-            id: resourceId('Microsoft.Network/virtualNetworks/subnets', virtualNetworkName, subnetName)
+            id: '${vnetExternal.id}/subnets/${subnetName}'
           }
         }
       }
@@ -115,6 +123,29 @@ resource vm 'Microsoft.Compute/virtualMachines@2021-03-01' = {
       bootDiagnostics: {
         enabled: false
       }
+    }
+  }
+}
+
+resource vmName_installcustomscript 'Microsoft.Compute/virtualMachines/extensions@2018-06-01' = if (length(scriptExecute)> 0) {
+  parent: vm
+  name: 'installcustomscript'
+  location: location
+  tags: {
+    displayName: 'install software for Windows VM'
+  }
+  properties: {
+    publisher: 'Microsoft.Compute'
+    type: 'CustomScriptExtension'
+    typeHandlerVersion: '1.10'
+    autoUpgradeMinorVersion: true
+    settings: {
+      fileUris: [
+        scriptURL
+      ]
+    }
+    protectedSettings: {
+      commandToExecute: 'powershell -ExecutionPolicy Unrestricted -File ${scriptExecute}'
     }
   }
 }
