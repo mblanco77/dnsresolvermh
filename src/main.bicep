@@ -8,8 +8,18 @@ module net 'modules/networking.bicep' = {
   name: 'Networking'
   params:{
     location: location
+  }
+}
+
+module conn 'modules/connections.bicep' = {
+  name: 'Connections'
+  params:{
+    location: location
     deployvpn: deployvpn
   }
+  dependsOn:[
+    net
+  ]
 }
 module compmod 'modules/compute.bicep' = {
   name: 'Compute'
@@ -17,6 +27,9 @@ module compmod 'modules/compute.bicep' = {
     location: location
     _artifactsLocation: _artifactsLocation
   }
+  dependsOn:[
+    net
+  ]
 }
 
 output pass string = compmod.outputs.pass
