@@ -30,6 +30,12 @@ param firewallMgmtSubnetName string = 'AzureFirewallManagementSubnet'
 @description('Firewall management subnet prefix')
 param firewallMgmtSubnetPrefix string = '10.60.7.0/24'
 
+@description('vm subnet name')
+param vmSubnetName string = 'vmSubnet'
+
+@description('vm subnet prefix')
+param vmSubnetPrefix string = '10.60.1.0/24'
+
 
 resource virtualNetwork 'Microsoft.Network/virtualNetworks@2019-11-01' = {
   name: vnetName
@@ -65,6 +71,13 @@ resource virtualNetwork 'Microsoft.Network/virtualNetworks@2019-11-01' = {
           addressPrefix: firewallMgmtSubnetPrefix
         }
       }
+      {
+        name: vmSubnetName
+        properties: {
+          addressPrefix: vmSubnetPrefix
+        }
+      }
+
     ]
   }
 }

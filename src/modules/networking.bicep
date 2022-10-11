@@ -1,7 +1,8 @@
 param location string = resourceGroup().location
+param deployvpn bool = true
 
 module vnetModule 'networking/vnetdeploy.bicep' = {
-  name:'vnet-hub'
+  name:'vnet-hubModule'
   params:{
     vNetType: 'hub'
     location: location
@@ -9,7 +10,7 @@ module vnetModule 'networking/vnetdeploy.bicep' = {
 }
 
 module vnetModulespoke 'networking/vnetdeploy.bicep' = {
-  name:'vnet-spoke'
+  name:'vnet-spokeModule'
   params:{
     vNetType: 'spoke1'
     location: location
@@ -17,7 +18,7 @@ module vnetModulespoke 'networking/vnetdeploy.bicep' = {
 }
 
 module vnetModuleOnprem 'networking/vnetdeploy.bicep' = {
-  name:'vnet-onprem'
+  name:'vnet-onpremModule'
   params:{
     vNetType: 'onprem'
     location: location
@@ -25,7 +26,7 @@ module vnetModuleOnprem 'networking/vnetdeploy.bicep' = {
 }
 
 module peeringModule 'networking/peerings.bicep' = {
-  name:'peerings'
+  name:'peeringsModule'
   params:{
     
   }
@@ -34,9 +35,20 @@ module peeringModule 'networking/peerings.bicep' = {
     vnetModule
   ]
 }
+module bastion 'networking/bastion.bicep' = {
+  name: 'bastionhost'
+  params: {
+    location: location
+    vnetName: 'hub-vnet' 
+  }
+  dependsOn:[
+    vnetModule
+  ]
+}
 
-module virtualNetworkGateway 'networking/VirtualNetworkGateway.bicep' = {
-  name: 'VirtualNetworkGateway'
+
+module virtualNetworkGateway 'networking/VirtualNetworkGateway.bicep' = if (deployvpn == true) {
+  name: 'VirtualNetworkGatewayModule'
   params: {
     enableBGP: false
     gatewayType: 'Vpn'
@@ -54,8 +66,8 @@ module virtualNetworkGateway 'networking/VirtualNetworkGateway.bicep' = {
   ]
 }
 
-module virtualNetworkGatewayOnprem 'networking/VirtualNetworkGateway.bicep' = {
-  name: 'VirtualNetworkGatewayOnprem'
+module virtualNetworkGatewayOnprem 'networking/VirtualNetworkGateway.bicep' = if (deployvpn == true) {
+  name: 'VirtualNetworkGatewayOnpremModule'
   params: {
     enableBGP: false
     gatewayType: 'Vpn'
@@ -72,7 +84,7 @@ module virtualNetworkGatewayOnprem 'networking/VirtualNetworkGateway.bicep' = {
     vnetModuleOnprem
   ]
 }
-module linkedTemplateGetIpOnprem 'networking/getiphub.bicep' = {
+module linkedTemplateGetIpOnprem 'networking/getiphub.bicep' = if (deployvpn == true) {
   name: 'linkedTemplateGetIpOnprem'
   params: {
     ipName: virtualNetworkGatewayOnprem.outputs.ipid
@@ -82,7 +94,7 @@ module linkedTemplateGetIpOnprem 'networking/getiphub.bicep' = {
   ]
 }
 
-module localNetworkGateway 'networking/LocalNetworkGateway.bicep' = {
+module localNetworkGateway 'networking/LocalNetworkGateway.bicep' = if (deployvpn == true)  {
   name: 'LocalNetworkGateway'
   params: {
     addressPrefixes: [
@@ -97,7 +109,7 @@ module localNetworkGateway 'networking/LocalNetworkGateway.bicep' = {
   ]
 }
 
-module connection 'networking/vpn.bicep' = {
+module connection 'networking/vpn.bicep' = if (deployvpn == true) {
   name: 'vpn'
   params: {
     connectionName: 'cnt-to-onprem'
@@ -109,7 +121,7 @@ module connection 'networking/vpn.bicep' = {
     virtualNetworkGatewayId: virtualNetworkGateway.outputs.vngid
   }
 }
-module linkedTemplateGetIpHub 'networking/getiphub.bicep' = {
+module linkedTemplateGetIpHub 'networking/getiphub.bicep' = if (deployvpn == true)  {
   name: 'linkedTemplateGetIpHub'
   params: {
     ipName: virtualNetworkGateway.outputs.ipid
@@ -119,7 +131,7 @@ module linkedTemplateGetIpHub 'networking/getiphub.bicep' = {
   ]
 }
 
-module localNetworkGatewayonprem 'networking/LocalNetworkGateway.bicep' = {
+module localNetworkGatewayonprem 'networking/LocalNetworkGateway.bicep' = if (deployvpn == true)  {
   name: 'LocalNetworkGatewayOnprem'
   params: {
     addressPrefixes: [
@@ -134,7 +146,7 @@ module localNetworkGatewayonprem 'networking/LocalNetworkGateway.bicep' = {
   ]
 }
 
-module connectiononprem 'networking/vpn.bicep' = {
+module connectiononprem 'networking/vpn.bicep' = if (deployvpn == true)  {
   name: 'vpnonprem'
   params: {
     connectionName: 'cnt-to-hub'
@@ -146,4 +158,5 @@ module connectiononprem 'networking/vpn.bicep' = {
     virtualNetworkGatewayId: virtualNetworkGatewayOnprem.outputs.vngid
   }
 }
+
 

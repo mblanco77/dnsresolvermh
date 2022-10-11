@@ -69,5 +69,3 @@ PS C:\> Test-BicepFile -Path 'MyBicep.bicep' -AcceptDiagnosticLevel 'Warning'
 
 Best Practices <https://learn.microsoft.com/en-us/azure/azure-resource-manager/bicep/best-practices>
 Vpn y Conecciones <https://www.cloudninja.nu/post/2021/06/getting-started-with-github-actions-and-bicep-part-4/>
-
-
