@@ -102,7 +102,6 @@ var nicdnsSettings = {
 var nicProperties = ((nicDns == 'No') ? nicipConfigurations : union(nicipConfigurations, nicdnsSettings))
 
 
-
 resource pip 'Microsoft.Network/publicIPAddresses@2021-02-01' = {
   name: publicIpName
   location: location
