@@ -18,6 +18,9 @@ param vmSubnetName string = 'vmSubnet'
 @description('vm subnet prefix')
 param vmSubnetPrefix string = '192.168.1.0/24'
 
+@description('dnsserver')
+param dnsserver string = ''
+
 resource securityGroup 'Microsoft.Network/networkSecurityGroups@2021-02-01' = {
   name: 'nsgonprem'
   location: location

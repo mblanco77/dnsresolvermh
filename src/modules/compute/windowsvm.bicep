@@ -15,6 +15,19 @@ param vmName string
   'Static'
 ])
 param publicIPAllocationMethod string = 'Dynamic'
+@description('Is this VM using a static or dynamic IP?')
+@allowed([
+  'Dynamic'
+  'Static'
+])
+param privateIPAllocationMethod string = 'Dynamic'
+
+@description('set azure provided dns to nic')
+@allowed([
+  'Yes'
+  'No'
+])
+param nicDns string = 'No'
 
 @description('SKU for the Public IP used to access the Virtual Machine.')
 @allowed([
@@ -42,10 +55,53 @@ param scriptURL string = ''
 param scriptExecute string = ''
 
 var nicName = '${vmName}nic'
+@description('name of the nic')
+param privateIPAddress string = ''
 
 var dnsLabelPrefix = toLower('${vmName}-${uniqueString(resourceGroup().id, vmName)}')
 
 var publicIpName = '${vmName}PublicIP'
+
+var nicIpConfigurationType = {
+  Dynamic: {
+    privateIPAllocationMethod: 'Dynamic'
+    subnet: {
+      id: resourceId('Microsoft.Network/virtualNetworks/subnets', virtualNetworkName, subnetName)
+    }
+    publicIPAddress: {
+      id: pip.id
+    }
+  }
+  Static: {
+    privateIPAllocationMethod: 'Static'
+    subnet: {
+      id: resourceId('Microsoft.Network/virtualNetworks/subnets', virtualNetworkName, subnetName)
+    }
+    privateIPAddress: privateIPAddress
+    publicIPAddress: {
+      id: pip.id
+    }
+  }
+}
+var nicIpProperties = nicIpConfigurationType[privateIPAllocationMethod]
+var nicipConfigurations = {
+  ipConfigurations: [
+    {
+      name: 'ipConfig1'
+      properties: nicIpProperties
+    }
+  ]
+}
+var nicdnsSettings = {
+  dnsSettings: {
+    dnsServers: [
+      '168.63.129.16'
+    ]
+  }
+}
+var nicProperties = ((nicDns == 'No') ? nicipConfigurations : union(nicipConfigurations, nicdnsSettings))
+
+
 
 resource pip 'Microsoft.Network/publicIPAddresses@2021-02-01' = {
   name: publicIpName
@@ -68,22 +124,7 @@ resource vnetExternal 'Microsoft.Network/virtualNetworks@2020-08-01' existing = 
 resource nic 'Microsoft.Network/networkInterfaces@2021-02-01' = {
   name: nicName
   location: location
-  properties: {
-    ipConfigurations: [
-      {
-        name: 'ipconfig1'
-        properties: {
-          privateIPAllocationMethod: 'Dynamic'
-          publicIPAddress: {
-            id: pip.id
-          }
-          subnet: {
-            id: '${vnetExternal.id}/subnets/${subnetName}'
-          }
-        }
-      }
-    ]
-  }
+  properties: nicProperties
   dependsOn:[
     vnetExternal
   ]

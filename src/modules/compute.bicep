@@ -65,6 +65,9 @@ module modvmdns 'compute/windowsvm.bicep' = {
     location: location
     virtualNetworkName: 'onprem-vnet'
     subnetName:'vmSubnet'
+    privateIPAllocationMethod: 'Static'
+    privateIPAddress: '192.168.1.4'
+    nicDns: 'Yes'
     scriptURL: configuration.uriInstallScriptsDNS
     scriptExecute: configuration.scriptexednsonprem
 
