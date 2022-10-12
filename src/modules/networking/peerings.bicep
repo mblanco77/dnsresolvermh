@@ -7,8 +7,8 @@ resource peer1 'microsoft.network/virtualNetworks/virtualNetworkPeerings@2020-05
   name: '${hubVnetName}/hub-to-spoke1'
   properties: {
     allowVirtualNetworkAccess: true
-    allowForwardedTraffic: false
-    allowGatewayTransit: false
+    allowForwardedTraffic: true
+    allowGatewayTransit: true
     useRemoteGateways: false
     remoteVirtualNetwork: {
       id: resourceId(rgname, 'Microsoft.Network/virtualNetworks', spoke1VnetName)
@@ -20,9 +20,9 @@ resource peer2 'microsoft.network/virtualNetworks/virtualNetworkPeerings@2020-05
   name: '${spoke1VnetName}/spoke1-to-hub'
   properties: {
     allowVirtualNetworkAccess: true
-    allowForwardedTraffic: false
+    allowForwardedTraffic: true
     allowGatewayTransit: false
-    useRemoteGateways: false
+    useRemoteGateways: true
     remoteVirtualNetwork: {
       id: resourceId(rgname, 'Microsoft.Network/virtualNetworks', hubVnetName)
     }

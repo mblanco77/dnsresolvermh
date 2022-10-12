@@ -101,6 +101,7 @@ module localNetworkGatewayonprem 'networking/LocalNetworkGateway.bicep' = if (de
   params: {
     addressPrefixes: [
       '10.60.0.0/16'
+      '10.120.0.0/16'
     ]
     gatewayIpAddress: linkedTemplateGetIpHub.outputs.ipoutgw
     localNetworkGatewayName: 'lng-hub'
