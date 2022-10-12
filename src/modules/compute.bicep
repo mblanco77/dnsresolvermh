@@ -26,6 +26,9 @@ module modvmonprem 'compute/windowsvm.bicep' = {
     scriptURL: configuration.uriInstallScripts
     scriptExecute: configuration.scriptexeonprem
   }
+  dependsOn:[
+    modvmdns
+  ]
 }
 
 module modvmhub 'compute/windowsvm.bicep' = {

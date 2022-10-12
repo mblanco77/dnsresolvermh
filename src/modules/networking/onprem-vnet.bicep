@@ -49,6 +49,11 @@ resource virtualNetwork 'Microsoft.Network/virtualNetworks@2019-11-01' = {
         vnetAddressPrefix
       ]
     }
+    dhcpOptions: {
+      dnsServers:[
+        '192.168.1.4'  
+      ]
+    }
     subnets: [
       {
         name: gatewaySubnetName
