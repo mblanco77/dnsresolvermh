@@ -8,6 +8,9 @@ module peeringModule 'networking/peerings.bicep' = {
   params:{
     
   }
+  dependsOn:[
+    virtualNetworkGateway
+  ]
 }
 module bastion 'networking/bastion.bicep' = {
   name: 'bastionhost'
