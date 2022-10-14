@@ -24,11 +24,17 @@ param firewallSubnetName string = 'AzureFirewallSubnet'
 @description('Firewall user traffic subnet prefix')
 param firewallSubnetPrefix string = '10.60.6.0/24'
 
-@description('Firewall management subnet name')
-param firewallMgmtSubnetName string = 'AzureFirewallManagementSubnet'
+@description('pvt dns resolver inbound subnet name')
+param pvtDnsResolverInSubnetName string = 'pvtdnsresolverinSubnet'
 
-@description('Firewall management subnet prefix')
-param firewallMgmtSubnetPrefix string = '10.60.7.0/24'
+@description('pvt dns resolver inbound subnet prefix')
+param pvtDnsResolverInSubnetPrefix string = '10.60.0.0/26'
+
+@description('pvt dns resolver outbound subnet name')
+param pvtDnsResolverOutSubnetName string = 'pvtdnsresolverinSubnet'
+
+@description('pvt dns resolver outbound subnet prefix')
+param pvtDnsResolverOutSubnetPrefix string = '10.60.0.64/26'
 
 @description('vm subnet name')
 param vmSubnetName string = 'vmSubnet'
@@ -89,11 +95,18 @@ resource virtualNetwork 'Microsoft.Network/virtualNetworks@2019-11-01' = {
         }
       }
       {
-        name: firewallMgmtSubnetName
+        name: pvtDnsResolverInSubnetName
         properties: {
-          addressPrefix: firewallMgmtSubnetPrefix
+          addressPrefix: pvtDnsResolverInSubnetPrefix
         }
       }
+      {
+        name: pvtDnsResolverOutSubnetName
+        properties: {
+          addressPrefix: pvtDnsResolverOutSubnetPrefix
+        }
+      }
+
       {
         name: vmSubnetName
         properties: {
