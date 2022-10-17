@@ -25,13 +25,13 @@ param firewallSubnetName string = 'AzureFirewallSubnet'
 param firewallSubnetPrefix string = '10.60.6.0/24'
 
 @description('pvt dns resolver inbound subnet name')
-param pvtDnsResolverInSubnetName string = 'pvtdnsresolverinSubnet'
+param pvtDnsResolverInSubnetName string = 'pvtDnsResolverInSubnet'
 
 @description('pvt dns resolver inbound subnet prefix')
 param pvtDnsResolverInSubnetPrefix string = '10.60.0.0/26'
 
 @description('pvt dns resolver outbound subnet name')
-param pvtDnsResolverOutSubnetName string = 'pvtdnsresolverinSubnet'
+param pvtDnsResolverOutSubnetName string = 'pvtDnsResolverOutSubnet'
 
 @description('pvt dns resolver outbound subnet prefix')
 param pvtDnsResolverOutSubnetPrefix string = '10.60.0.64/26'
